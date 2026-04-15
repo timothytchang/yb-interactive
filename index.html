@@ -1,0 +1,1170 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Yb Interactive — 171/174 Yb Level Diagram</title>
+<style>
+  /* International Typographic Style (Swiss Style).
+     Helvetica Neue. Maximum meaning, minimum ink.
+     Strict black & white with burnt orange accent. */
+  :root {
+    --bg:       #FFFFFF;
+    --panel:    #FFFFFF;
+    --panel2:   #FAFAFA;
+    --ink:      #000000;
+    --dim:      #666666;
+    --dim2:     #AAAAAA;
+    --accent:   #CC5500;   /* burnt orange */
+    --rule:     #000000;   /* hairlines are pure black */
+    --rule-soft:#E5E5E5;   /* secondary hairlines */
+    --warn:     #CC5500;
+    --font:     'Helvetica Neue', Helvetica, Arial, sans-serif;
+
+    --type-h1:  32px;
+    --type-h2:  24px;
+    --type-h3:  18px;
+    --type-body:16px;
+    --type-meta:13px;
+    --tracking-h1:  -1px;
+    --tracking-body:-0.3px;
+    --tracking-meta: 0;
+    --lh: 1.35;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    height: 100%;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--font);
+    font-size: var(--type-body);
+    line-height: var(--lh);
+    letter-spacing: var(--tracking-body);
+    font-weight: 400;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  /* Proper typographic superscripts & subscripts.
+     Using real <sup>/<sub> instead of Unicode characters so the baseline
+     is consistent across digits (¹⁷¹ mixes Unicode blocks otherwise). */
+  sup, sub {
+    font-size: 0.68em;
+    line-height: 0;
+    vertical-align: baseline;
+    position: relative;
+  }
+  sup { top: -0.55em; }
+  sub { bottom: -0.3em; }
+
+  .app {
+    display: grid;
+    grid-template-columns: 280px 1fr 380px;
+    grid-template-rows: 64px 1fr;
+    height: 100vh;
+    background: var(--bg);
+  }
+  header {
+    grid-column: 1 / -1;
+    display: flex; align-items: center; gap: 16px;
+    padding: 0 40px;
+    background: var(--bg);
+    border-bottom: 1px solid var(--accent);
+  }
+  header .brand {
+    display: flex; align-items: center; gap: 14px;
+  }
+  header .dot {
+    width: 12px; height: 12px;
+    background: var(--accent);
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  header h1 {
+    font-family: var(--font);
+    font-size: 20px;
+    font-weight: 500;
+    margin: 0;
+    letter-spacing: -0.3px;
+    color: var(--ink);
+    line-height: 1;
+  }
+  header .sep { color: var(--dim2); font-size: 18px; line-height: 1; font-weight: 300; }
+  header .sub {
+    color: var(--dim);
+    font-size: var(--type-meta);
+    letter-spacing: var(--tracking-meta);
+    text-transform: uppercase;
+    font-weight: 400;
+    line-height: 1;
+  }
+  header .tabs { margin-left: auto; display: flex; gap: 32px; align-items: center; }
+  header .tab {
+    cursor: pointer;
+    color: var(--ink);
+    font-size: var(--type-meta);
+    font-weight: 400;
+    letter-spacing: var(--tracking-meta);
+    text-transform: uppercase;
+    padding: 2px 0;
+    border: none;
+    background: none;
+    line-height: 1;
+    transition: color 0.15s ease;
+  }
+  header .tab:hover { color: var(--accent); }
+  header .tab.active { color: var(--accent); }
+
+  aside.left {
+    background: var(--panel);
+    border-right: 1px solid var(--rule);
+    padding: 40px 32px;
+    overflow-y: auto;
+  }
+  aside.right {
+    background: var(--panel);
+    border-left: 1px solid var(--rule);
+    padding: 40px 32px;
+    overflow-y: auto;
+  }
+  main { position: relative; overflow: hidden; background: var(--bg); }
+
+  .group { margin-bottom: 40px; }
+  .group h3 {
+    margin: 0 0 12px;
+    font-size: var(--type-meta);
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-meta);
+    color: var(--ink);
+  }
+  .row { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+  .row label {
+    flex: 1;
+    color: var(--ink);
+    font-size: var(--type-body);
+    font-weight: 400;
+  }
+  select, input[type="text"], input[type="number"] {
+    background: transparent;
+    color: var(--ink);
+    border: none;
+    border-bottom: 1px solid var(--rule);
+    border-radius: 0;
+    padding: 8px 2px;
+    font-family: var(--font);
+    font-size: var(--type-body);
+    letter-spacing: var(--tracking-body);
+    transition: border-color 0.15s ease;
+  }
+  select:focus, input[type="text"]:focus, input[type="number"]:focus {
+    outline: none; border-bottom-color: var(--accent);
+  }
+  input[type="range"] {
+    width: 100%;
+    -webkit-appearance: none; appearance: none;
+    background: transparent; height: 20px;
+  }
+  input[type="range"]::-webkit-slider-runnable-track {
+    height: 1px; background: var(--rule);
+  }
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none; appearance: none;
+    width: 12px; height: 12px; border-radius: 50%;
+    background: var(--accent); border: 0;
+    margin-top: -5.5px; cursor: pointer;
+  }
+  .sliderValue {
+    color: var(--ink);
+    font-family: var(--font);
+    font-weight: 500;
+    font-size: var(--type-body);
+    min-width: 68px;
+    text-align: right;
+    letter-spacing: var(--tracking-body);
+  }
+  .toggle { display: flex; gap: 24px; flex-wrap: wrap; }
+  .toggle button {
+    background: transparent;
+    color: var(--ink);
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    font-family: var(--font);
+    font-size: var(--type-body);
+    font-weight: 400;
+    letter-spacing: var(--tracking-body);
+    transition: color 0.15s ease;
+  }
+  .toggle button.active { color: var(--accent); }
+  .toggle button:hover:not(.active) { color: var(--accent); }
+
+  /* SVG diagram */
+  svg.diagram { width: 100%; height: 100%; display: block; }
+  svg text {
+    fill: var(--ink);
+    font-family: var(--font);
+    font-size: 14px;
+    font-weight: 400;
+    letter-spacing: var(--tracking-body);
+  }
+  svg .axis text { fill: var(--dim); font-size: 12px; }
+  svg .axis line, svg .axis path { stroke: var(--ink); fill: none; }
+  svg .level {
+    stroke-width: 4;
+    stroke-linecap: butt;
+    cursor: pointer;
+    transition: stroke-width 0.15s ease;
+  }
+  svg .level:hover { stroke-width: 5; }
+  svg .level.selected { stroke: var(--accent) !important; stroke-width: 5; }
+  svg .level-label { pointer-events: none; font-weight: 400; fill: var(--ink); font-size: 14px; }
+  svg .transition {
+    stroke-width: 2;
+    fill: none;
+    pointer-events: none;
+    opacity: 1;
+    transition: stroke-width 0.15s ease;
+  }
+  svg .transition-hit {
+    stroke: transparent;
+    stroke-width: 20;
+    fill: none;
+    cursor: pointer;
+  }
+  svg .transition-group:hover .transition { stroke-width: 4; }
+  svg .transition-group.selected .transition { stroke-width: 4; }
+  svg .tr-label { pointer-events: none; font-size: 14px; font-weight: 500; paint-order: stroke; stroke: #fff; stroke-width: 4px; stroke-linejoin: round; }
+
+  /* breadcrumb */
+  .crumb {
+    position: absolute; top: 24px; left: 40px; z-index: 5;
+    background: var(--bg);
+    padding: 4px 0;
+    font-size: var(--type-meta);
+    color: var(--ink);
+    letter-spacing: var(--tracking-meta);
+    text-transform: uppercase;
+    font-weight: 400;
+    line-height: 1;
+  }
+  .crumb .here { color: var(--accent); }
+  .crumb button {
+    background: none; border: none; color: var(--ink); cursor: pointer;
+    font: inherit; padding: 0;
+    letter-spacing: var(--tracking-meta);
+    text-transform: uppercase;
+    font-weight: 400;
+  }
+  .crumb button:hover { color: var(--accent); }
+  .crumb .arrow { color: var(--dim2); margin: 0 8px; }
+
+  /* right pane */
+  .detail-title {
+    font-family: var(--font);
+    font-size: var(--type-h1);
+    font-weight: 500;
+    margin: 0 0 4px;
+    letter-spacing: var(--tracking-h1);
+    line-height: 1.1;
+    color: var(--ink);
+  }
+  .detail-sub {
+    color: var(--dim);
+    font-size: var(--type-meta);
+    margin-bottom: 32px;
+    letter-spacing: var(--tracking-meta);
+    text-transform: uppercase;
+    font-weight: 400;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--rule);
+  }
+  .kv {
+    display: grid; grid-template-columns: 150px 1fr; gap: 0 16px;
+    font-size: var(--type-body);
+    margin-bottom: 24px;
+  }
+  .kv dt { color: var(--ink); font-weight: 400; letter-spacing: var(--tracking-body); }
+  .kv dd {
+    margin: 0;
+    font-family: var(--font);
+    color: var(--ink);
+    word-break: break-word;
+    font-weight: 500;
+    text-align: right;
+  }
+  .kv dt, .kv dd { border-bottom: 1px solid var(--rule-soft); padding: 10px 0; }
+  .section-title {
+    font-size: var(--type-meta);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-meta);
+    color: var(--ink);
+    font-weight: 400;
+    margin: 32px 0 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--rule);
+  }
+  .empty {
+    color: var(--dim);
+    font-size: var(--type-meta);
+    padding: 32px 0;
+    text-align: left;
+    border: none;
+    letter-spacing: var(--tracking-meta);
+    text-transform: uppercase;
+    font-weight: 400;
+  }
+  .branch-row { display: flex; align-items: center; gap: 16px; margin-bottom: 10px; font-size: var(--type-body); }
+  .branch-row .lbl { width: 52px; color: var(--ink); font-weight: 400; }
+  .branch-row .bar { flex: 1; height: 1px; background: var(--rule-soft); overflow: hidden; }
+  .branch-row .bar .fill { height: 3px; margin-top: -1px; background: var(--accent); }
+  .branch-row .pct { width: 60px; text-align: right; color: var(--ink); font-weight: 500; }
+
+  .note {
+    background: transparent;
+    border-left: 2px solid var(--accent);
+    padding: 6px 0 6px 16px;
+    font-size: var(--type-body);
+    color: var(--ink);
+    line-height: var(--lh);
+    margin-top: 20px;
+    font-weight: 400;
+  }
+  .warn { border-left-color: var(--accent); color: var(--accent); }
+  .footer {
+    color: var(--dim);
+    font-size: var(--type-meta);
+    margin-top: 40px;
+    line-height: 1.6;
+    letter-spacing: var(--tracking-meta);
+    padding-top: 20px;
+    border-top: 1px solid var(--rule);
+  }
+  .footer em { color: var(--ink); font-style: italic; }
+
+  .action-btn {
+    background: transparent;
+    color: var(--ink);
+    border: none;
+    border-bottom: 1px solid var(--ink);
+    padding: 8px 0;
+    cursor: pointer;
+    font-family: var(--font);
+    font-size: var(--type-body);
+    font-weight: 400;
+    letter-spacing: var(--tracking-body);
+    transition: color 0.15s ease, border-color 0.15s ease;
+    text-align: left;
+  }
+  .action-btn:hover { color: var(--accent); border-bottom-color: var(--accent); }
+</style>
+<script src="data/data.js"></script>
+</head>
+<body>
+<div class="app">
+  <header>
+    <div class="brand">
+      <span class="dot"></span>
+      <h1>Yb Interactive</h1>
+      <span class="sep">/</span>
+      <span class="sub"><sup>171</sup>Yb · <sup>174</sup>Yb Reference</span>
+    </div>
+    <div class="tabs">
+      <div class="tab active" data-view="overview">Overview</div>
+      <div class="tab" data-view="hyperfine">Hyperfine</div>
+      <div class="tab" data-view="polarizability">Polarizability</div>
+    </div>
+  </header>
+
+  <aside class="left">
+    <div class="group">
+      <h3>Isotope</h3>
+      <div class="toggle" id="isotopeToggle">
+        <button data-iso="171" class="active"><sup>171</sup>Yb</button>
+        <button data-iso="174"><sup>174</sup>Yb</button>
+      </div>
+    </div>
+
+    <div class="group">
+      <h3>Wavelength basis</h3>
+      <div class="toggle" id="wlToggle">
+        <button data-wl="vac" class="active">vacuum</button>
+        <button data-wl="air">air</button>
+      </div>
+    </div>
+
+    <div class="group">
+      <h3>Magnetic field</h3>
+      <div class="row">
+        <input type="range" id="bfield" min="0" max="1000" step="1" value="0" />
+        <span class="sliderValue" id="bfieldValue">0 G</span>
+      </div>
+      <div class="row" style="color: var(--dim); font-size: 11px;">
+        Drives Zeeman shifts in the hyperfine view.
+      </div>
+    </div>
+
+    <div class="footer">
+      Data: Kroeze, Kristensen, Pucher — <br/>
+      <em><sup>171</sup>Yb Reference Data</em>, Feb 2026.<br/>
+      Values in <code>data/data.js</code>.
+    </div>
+  </aside>
+
+  <main>
+    <div class="crumb" id="crumb"><span class="here">Overview</span></div>
+    <svg class="diagram" id="diagram" preserveAspectRatio="xMidYMid meet"></svg>
+  </main>
+
+  <aside class="right" id="detail">
+    <div class="empty">Click a state or transition to see parameters.</div>
+  </aside>
+</div>
+
+<script>
+// ==================== state ====================
+const app = {
+  view: 'overview',            // overview | hyperfine | polarizability
+  isotope: '171',              // '171' | '174'
+  wlBasis: 'vac',
+  Bfield: 0,                   // Gauss
+  showDim: false,
+  selectedState: null,
+  selectedTransition: null,
+  hfState: null,               // state id being shown in hyperfine view
+};
+
+const STATES = STATES_DATA.states;
+const TRANSITIONS = TRANSITIONS_DATA.transitions;
+const ISO_SHIFTS = TRANSITIONS_DATA.isotope_shifts_MHz;
+
+const stateById = Object.fromEntries(STATES.map(s => [s.id, s]));
+const trById = Object.fromEntries(TRANSITIONS.map(t => [t.id, t]));
+
+// ==================== helpers ====================
+const fmt = {
+  sig(x, n=4) {
+    if (x === null || x === undefined || Number.isNaN(x)) return "—";
+    if (x === 0) return "0";
+    const a = Math.abs(x);
+    if (a >= 1e4 || a < 1e-3) return x.toExponential(n - 1);
+    return x.toPrecision(n);
+  },
+  err(v, e, unit="") {
+    if (v === null || v === undefined) return "—";
+    if (e === undefined || e === null) return `${v}${unit ? " " + unit : ""}`;
+    return `${v}(${Math.round(e * Math.pow(10, (v.toString().split('.')[1]||'').length))}) ${unit}`.trim();
+  },
+};
+
+function applyIsotopeShift(freqTHz, toStateId) {
+  // 171 is reference in data; for 174 subtract the 171 shift (shift = E_171 - E_174)
+  const shift = ISO_SHIFTS[app.isotope]?.[toStateId];
+  if (shift === null || shift === undefined) return freqTHz;
+  return freqTHz - (ISO_SHIFTS["171"][toStateId] || 0) * 1e-6 + shift * 1e-6;
+}
+
+function wavelengthFor(t) {
+  const w = app.wlBasis === 'vac' ? t.lambda_vac_nm : (t.lambda_air_nm || t.lambda_vac_nm);
+  return w;
+}
+
+// ==================== SVG rendering ====================
+const svgNS = "http://www.w3.org/2000/svg";
+const svg = document.getElementById('diagram');
+
+function clear(el) { while (el.firstChild) el.removeChild(el.firstChild); }
+function mk(tag, attrs={}, parent=svg) {
+  const el = document.createElementNS(svgNS, tag);
+  for (const [k, v] of Object.entries(attrs)) el.setAttribute(k, v);
+  if (parent) parent.appendChild(el);
+  return el;
+}
+
+// ---------- OVERVIEW VIEW ----------
+// Columns by term symbol (L character)
+const columnByTerm = {
+  "1S": 0, "1P": 1, "1D": 2,
+  "3S": 0, "3P": 1, "3D": 2
+};
+// We use two "term groups": singlets on left half, triplets on right half.
+// Actual column layout:
+//   1S  1P    3S  3P  3D
+//    0   1     2   3   4
+const colX = { "1S0": 0, "1P1": 1, "3S1": 2, "3P0": 3, "3P1": 3, "3P2": 3, "3D1": 4, "3D2": 4 };
+
+function renderOverview() {
+  clear(svg);
+  const w = svg.clientWidth || 900;
+  const h = svg.clientHeight || 600;
+  svg.setAttribute("viewBox", `0 0 ${w} ${h}`);
+
+  const mL = 110, mR = 90, mT = 80, mB = 50;
+  const plotW = w - mL - mR;
+  const plotH = h - mT - mB;
+
+  const eMin = 0, eMax = 34000;
+  const yOf = e => mT + plotH * (1 - (e - eMin) / (eMax - eMin));
+  const nCols = 5;
+  const xOf = i => mL + plotW * ((i + 0.5) / nCols);
+
+  // Axis
+  const axis = mk("g", { class: "axis" });
+  mk("line", { x1: mL, y1: mT, x2: mL, y2: mT + plotH }, axis);
+  for (let e = 0; e <= eMax; e += 5000) {
+    const y = yOf(e);
+    mk("line", { x1: mL - 4, y1: y, x2: mL, y2: y }, axis);
+    const t = mk("text", { x: mL - 8, y: y + 3, "text-anchor": "end" }, axis);
+    t.textContent = (e / 1000).toFixed(0);
+  }
+  const ylab = mk("text", { x: 16, y: mT + plotH / 2, transform: `rotate(-90 16 ${mT + plotH / 2})`, "text-anchor": "middle", fill: "var(--dim)" });
+  ylab.textContent = "Energy (10³ cm⁻¹)";
+
+  // Column headers
+  const colLabels = ["¹S", "¹P", "³S", "³P", "³D"];
+  colLabels.forEach((l, i) => {
+    const t = mk("text", { x: xOf(i), y: mT + plotH + 28, "text-anchor": "middle", fill: "var(--dim)" });
+    t.textContent = l;
+  });
+
+  // Transitions (draw first so levels sit on top)
+  const tGroup = mk("g", { class: "transitions" });
+  const placedLabels = []; // bounding boxes for collision avoidance
+  const rectsOverlap = (a, b) =>
+    !(a.x + a.w < b.x || b.x + b.w < a.x || a.y + a.h < b.y || b.y + b.h < a.y);
+  // per-transition label-fraction hints (position along line: 0=from, 1=to)
+  const labelFracHint = {
+    yellow_clock: 0.6,
+    green_MOT: 0.5,
+    green_clock: 0.4,
+  };
+  TRANSITIONS.forEach(t => {
+    const fromState = stateById[t.from];
+    const toState = stateById[t.to];
+    if (!fromState || !toState) return;
+    if (app.isotope === "174" && t.id === "yellow_clock") {
+      // forbidden without external field — draw ghosted dashed
+    }
+    const x1 = xOf(colX[fromState.id]);
+    const y1 = yOf(fromState.energy_cm);
+    const x2 = xOf(colX[toState.id]);
+    const y2 = yOf(toState.energy_cm);
+    const dashed = (app.isotope === "174" && t.id === "yellow_clock");
+    const g = mk("g", {
+      class: "transition-group" + (app.selectedTransition === t.id ? " selected" : ""),
+      "data-tid": t.id
+    }, tGroup);
+    mk("line", {
+      x1, y1, x2, y2,
+      class: "transition-hit"
+    }, g);
+    mk("line", {
+      x1, y1, x2, y2,
+      class: "transition",
+      stroke: t.color,
+      "stroke-dasharray": dashed ? "5 4" : ""
+    }, g);
+    g.addEventListener("click", () => selectTransition(t.id));
+    g.addEventListener("mouseenter", () => showTooltip(t.name + " · " + wavelengthFor(t).toFixed(1) + " nm", g));
+
+    {
+      const text = wavelengthFor(t).toFixed(1) + " nm";
+      const labelW = text.length * 8 + 4;
+      const labelH = 18;
+      const dx = x2 - x1, dy = y2 - y1;
+      const len = Math.hypot(dx, dy) || 1;
+      // try several (frac, perpendicular-sign, perpendicular-distance) placements
+      const hint = labelFracHint[t.id];
+      const fracs = hint != null
+        ? [hint]
+        : [0.5, 0.35, 0.65, 0.25, 0.75, 0.15, 0.85];
+      const signs = [1, -1];
+      const dists = [20, 28, 36];
+      let best = null;
+      outer: for (const d of dists) {
+        for (const s of signs) {
+          for (const f of fracs) {
+            const mx = x1 + dx * f, my = y1 + dy * f;
+            const nx = -dy / len * d * s;
+            const ny = dx / len * d * s;
+            const cx_ = mx + nx, cy_ = my + ny;
+            const rect = { x: cx_ - labelW/2, y: cy_ - labelH/2, w: labelW, h: labelH };
+            if (!placedLabels.some(r => rectsOverlap(r, rect))) {
+              best = { cx: cx_, cy: cy_, rect };
+              break outer;
+            }
+          }
+        }
+      }
+      if (!best) {
+        const mx = (x1 + x2)/2, my = (y1 + y2)/2;
+        const nx = -dy / len * 20, ny = dx / len * 20;
+        best = {
+          cx: mx + nx, cy: my + ny,
+          rect: { x: mx + nx - labelW/2, y: my + ny - labelH/2, w: labelW, h: labelH }
+        };
+      }
+      placedLabels.push(best.rect);
+      const lbl = mk("text", {
+        x: best.cx, y: best.cy + 4, "text-anchor": "middle", class: "tr-label", fill: t.color
+      }, tGroup);
+      lbl.textContent = text;
+    }
+  });
+
+  // Levels (with within-column label anti-collision)
+  const lGroup = mk("g", { class: "levels" });
+  // Group states by column and sort by y so we can stagger labels
+  const byCol = {};
+  STATES.forEach(s => {
+    const c = colX[s.id];
+    (byCol[c] = byCol[c] || []).push(s);
+  });
+  for (const c in byCol) {
+    byCol[c].sort((a, b) => yOf(a.energy_cm) - yOf(b.energy_cm));
+  }
+
+  STATES.forEach(s => {
+    const cx = xOf(colX[s.id]);
+    const y = yOf(s.energy_cm);
+    const halfW = 38;
+    const line = mk("line", {
+      x1: cx - halfW, y1: y, x2: cx + halfW, y2: y,
+      class: "level" + (app.selectedState === s.id ? " selected" : ""),
+      stroke: "#000000",
+      "data-sid": s.id
+    }, lGroup);
+    line.addEventListener("click", () => selectState(s.id));
+    line.addEventListener("dblclick", () => drillInto(s.id));
+
+    // anti-collision: if previous label in same column is within 14 px, nudge this one down
+    const col = byCol[colX[s.id]];
+    const idx = col.indexOf(s);
+    let yText = y + 4;
+    if (idx > 0) {
+      const prevY = yOf(col[idx - 1].energy_cm) + 4;
+      if (Math.abs(yText - prevY) < 14) yText = prevY + 14;
+    }
+    const lbl = mk("text", {
+      x: cx + halfW + 6, y: yText, class: "level-label", fill: "var(--ink)"
+    }, lGroup);
+    lbl.textContent = s.label;
+    // thin connector from level line to label if nudged
+    if (Math.abs(yText - (y + 4)) > 2) {
+      mk("line", { x1: cx + halfW, y1: y, x2: cx + halfW + 5, y2: yText - 4, stroke: "var(--dim2)", "stroke-width": 0.7 }, lGroup);
+    }
+  });
+
+  // Title / hint
+  const hint = mk("text", { x: w - mR, y: mT - 14, "text-anchor": "end", fill: "var(--dim)", "font-size": 10 });
+  hint.textContent = `click = select · double-click level = hyperfine drill-down`;
+}
+
+// ---------- HYPERFINE + ZEEMAN VIEW ----------
+function renderHyperfine() {
+  clear(svg);
+  const w = svg.clientWidth || 900;
+  const h = svg.clientHeight || 600;
+  svg.setAttribute("viewBox", `0 0 ${w} ${h}`);
+
+  if (!app.hfState) {
+    const title = mk("text", { x: w/2, y: 90, "text-anchor": "middle", fill: "var(--ink)", "font-size": 16, "font-weight": 600 });
+    title.textContent = "Select a state to view hyperfine + Zeeman structure";
+    const sub = mk("text", { x: w/2, y: 112, "text-anchor": "middle", fill: "var(--dim)", "font-size": 12 });
+    sub.textContent = app.isotope === "171"
+      ? "171Yb: full F sublevels with A_hfs, g_F, and Zeeman splittings."
+      : "174Yb (I=0): bare m_J sublevels only.";
+
+    const cols = 2;
+    const gapX = 24, gapY = 20;
+    const padX = 80;
+    const cardW = (w - padX * 2 - gapX * (cols - 1)) / cols;
+    const cardH = 64;
+    const startY = 150;
+    STATES.forEach((s, i) => {
+      const col = i % cols;
+      const row = Math.floor(i / cols);
+      const cx = padX + col * (cardW + gapX);
+      const cy = startY + row * (cardH + gapY);
+      const g = mk("g", { class: "hf-card", style: "cursor:pointer;" });
+      mk("rect", {
+        x: cx, y: cy, width: cardW, height: cardH,
+        fill: "var(--bg)", stroke: "var(--ink)", "stroke-width": 1
+      }, g);
+      const lbl = mk("text", {
+        x: cx + 20, y: cy + 28,
+        fill: "var(--ink)", "font-size": 18, "font-weight": 500
+      }, g);
+      lbl.textContent = s.label;
+      const meta = mk("text", {
+        x: cx + 20, y: cy + 48,
+        fill: "var(--dim)", "font-size": 12
+      }, g);
+      const jStr = s.J === 0 ? "J=0" : s.J === 0.5 ? "J=1/2" : s.J === 1.5 ? "J=3/2" : `J=${s.J}`;
+      const hfCount = s.hyperfine_171?.levels?.length || 0;
+      meta.textContent = `${jStr}${app.isotope === "171" && hfCount ? `  ·  ${hfCount} F sublevels` : ""}`;
+      g.addEventListener("mouseenter", () => {
+        g.querySelector("rect").setAttribute("stroke", "var(--accent)");
+        g.querySelector("rect").setAttribute("stroke-width", "2");
+      });
+      g.addEventListener("mouseleave", () => {
+        g.querySelector("rect").setAttribute("stroke", "var(--ink)");
+        g.querySelector("rect").setAttribute("stroke-width", "1");
+      });
+      g.addEventListener("click", () => {
+        app.hfState = s.id;
+        updateCrumb();
+        render();
+      });
+    });
+    return;
+  }
+  const s = stateById[app.hfState];
+  const hf = s.hyperfine_171;
+  const B = app.Bfield; // Gauss
+
+  const mL = 90, mR = 40, mT = 130, mB = 60;
+  const plotW = w - mL - mR;
+  const plotH = h - mT - mB;
+
+  // Title
+  const title = mk("text", { x: w/2, y: 80, "text-anchor": "middle", fill: "var(--ink)", "font-size": 16, "font-weight": 600 });
+  title.textContent = `${s.label}   —   hyperfine + Zeeman`;
+  const sub = mk("text", { x: w/2, y: 100, "text-anchor": "middle", fill: "var(--dim)", "font-size": 12 });
+  if (app.isotope === "171") {
+    sub.textContent = `A_hfs = ${hf.A_hfs_MHz} MHz · B = ${B} G`;
+  } else {
+    sub.textContent = `174Yb (I=0): no hyperfine structure. Showing J sublevels only.`;
+  }
+
+  // Compute level positions
+  // For 171: each F sublevel has center E_F = A/2 · K (with K from Eq 15), plus Zeeman mF splittings
+  // For 174: just show mJ sublevels using gJ
+  const levels = [];
+  if (app.isotope === "171") {
+    const I = 0.5;
+    const J = s.J;
+    hf.levels.forEach(Lvl => {
+      const F = Lvl.F;
+      const K = F * (F + 1) - I * (I + 1) - J * (J + 1);
+      const Ecenter_MHz = 0.5 * hf.A_hfs_MHz * K;  // hyperfine center, MHz
+      const gF = Lvl.gF_kHzG; // kHz/G
+      for (let mF = -F; mF <= F; mF += 1) {
+        const zee_MHz = (gF * mF * B) / 1000; // kHz → MHz
+        levels.push({ F, mF, gF, E_MHz: Ecenter_MHz + zee_MHz, isCenter: mF === -F });
+      }
+      levels.push({ F, mF: null, gF, E_MHz: Ecenter_MHz, centerOnly: true });
+    });
+  } else {
+    // 174Yb: no nuclear spin. For J>0, Zeeman uses gJ·mJ·μB·B.
+    const gJ = s.gJ || 0;
+    if (s.J === 0) {
+      levels.push({ F: 0, mF: 0, gF: 0, E_MHz: 0 });
+    } else {
+      for (let mJ = -s.J; mJ <= s.J; mJ += 1) {
+        // μB = 1.3996 MHz/G
+        const zee_MHz = gJ * mJ * B * 1.3996;
+        levels.push({ F: s.J, mF: mJ, gF: gJ * 1399.6, E_MHz: zee_MHz });
+      }
+    }
+  }
+
+  // y scale
+  const allE = levels.map(l => l.E_MHz);
+  let eLo = Math.min(0, ...allE);
+  let eHi = Math.max(0, ...allE);
+  const span = Math.max(eHi - eLo, 10); // min span
+  const pad = span * 0.15;
+  eLo -= pad; eHi += pad;
+  const yOf = e => mT + plotH * (1 - (e - eLo) / (eHi - eLo));
+
+  // Axis
+  const axis = mk("g", { class: "axis" });
+  mk("line", { x1: mL, y1: mT, x2: mL, y2: mT + plotH }, axis);
+  const nTicks = 6;
+  for (let i = 0; i <= nTicks; i++) {
+    const e = eLo + (eHi - eLo) * i / nTicks;
+    const y = yOf(e);
+    mk("line", { x1: mL - 4, y1: y, x2: mL + plotW, y2: y, class: "gridline" }, axis);
+    const t = mk("text", { x: mL - 8, y: y + 3, "text-anchor": "end" }, axis);
+    t.textContent = Math.abs(e) > 1000 ? (e/1000).toFixed(2) + " GHz" : e.toFixed(1) + " MHz";
+  }
+  const ylab = mk("text", { x: 20, y: mT + plotH / 2, transform: `rotate(-90 20 ${mT + plotH / 2})`, "text-anchor": "middle", fill: "var(--dim)" });
+  ylab.textContent = `Energy shift from ${app.isotope === "171" ? "fine-structure center" : "zero-field"}`;
+
+  // Group levels by F
+  const byF = {};
+  levels.forEach(l => {
+    if (l.centerOnly) return;
+    if (!byF[l.F]) byF[l.F] = [];
+    byF[l.F].push(l);
+  });
+  const Fs = Object.keys(byF).map(Number).sort();
+  const nGroups = Fs.length || 1;
+  const groupW = plotW / nGroups;
+
+  Fs.forEach((F, gi) => {
+    const xc = mL + groupW * (gi + 0.5);
+    const ls = byF[F];
+    const mVals = ls.map(l => l.mF);
+    const mLo = Math.min(...mVals), mHi = Math.max(...mVals);
+    const nM = ls.length;
+    const mSpread = Math.min(groupW * 0.7, 220);
+    ls.forEach((l, i) => {
+      const x = xc - mSpread/2 + mSpread * (i / Math.max(nM - 1, 1));
+      const y = yOf(l.E_MHz);
+      mk("line", { x1: x - 18, y1: y, x2: x + 18, y2: y, stroke: "#000", "stroke-width": 4, "stroke-linecap": "butt" });
+      const lbl = mk("text", { x, y: y - 6, "text-anchor": "middle", fill: "var(--dim)", "font-size": 9 });
+      lbl.textContent = `m=${l.mF}`;
+    });
+
+    // F label
+    const Flbl = mk("text", { x: xc, y: mT + plotH + 22, "text-anchor": "middle", fill: "var(--ink)", "font-size": 13 });
+    Flbl.textContent = app.isotope === "171" ? `F = ${fracStr(F)}` : `J = ${F}`;
+  });
+
+  // Annotate fine-structure center(s)
+  if (app.isotope === "171") {
+    Fs.forEach(F => {
+      const K = F * (F + 1) - 0.5 * 1.5 - s.J * (s.J + 1);
+      const Ec = 0.5 * hf.A_hfs_MHz * K;
+      const y = yOf(Ec);
+      mk("line", { x1: mL, y1: y, x2: mL + plotW, y2: y, stroke: "var(--dim2)", "stroke-dasharray": "2 4" });
+    });
+  }
+}
+
+function fracStr(f) {
+  if (Number.isInteger(f)) return `${f}`;
+  const n = Math.round(f * 2);
+  return `${n}/2`;
+}
+
+// ---------- POLARIZABILITY VIEW ----------
+function renderPolarizability() {
+  clear(svg);
+  const w = svg.clientWidth || 900;
+  const h = svg.clientHeight || 600;
+  svg.setAttribute("viewBox", `0 0 ${w} ${h}`);
+
+  const mL = 80, mR = 40, mT = 125, mB = 60;
+  const plotW = w - mL - mR;
+  const plotH = h - mT - mB;
+
+  const title = mk("text", { x: w/2, y: 78, "text-anchor": "middle", fill: "var(--ink)", "font-size": 15, "font-weight": 600 });
+  title.textContent = "Magic and tune-out wavelengths (Table 7)";
+  const sub = mk("text", { x: w/2, y: 98, "text-anchor": "middle", fill: "var(--dim)", "font-size": 11 });
+  sub.textContent = "Points are experimentally measured values. Click a point for details.";
+
+  // x: wavelength (log), y: α in a.u. (symlog-ish)
+  const allPts = [
+    ...POLARIZABILITY_DATA.magic.map(p => ({...p, kind: "magic"})),
+    ...POLARIZABILITY_DATA.tune_out.map(p => ({...p, kind: "tune"}))
+  ];
+  const lamMin = 380, lamMax = 1500;
+  const xOf = l => mL + plotW * (Math.log10(l) - Math.log10(lamMin)) / (Math.log10(lamMax) - Math.log10(lamMin));
+
+  // symlog y
+  const symlog = v => Math.sign(v) * Math.log10(1 + Math.abs(v));
+  const yLo = -4.5, yHi = 4.5;  // approx range covering −15000 to +15000
+  const yOf = v => mT + plotH * (1 - (symlog(v) - yLo) / (yHi - yLo));
+
+  const axis = mk("g", { class: "axis" });
+  mk("line", { x1: mL, y1: mT + plotH, x2: mL + plotW, y2: mT + plotH }, axis);
+  mk("line", { x1: mL, y1: mT, x2: mL, y2: mT + plotH }, axis);
+
+  [400, 500, 600, 700, 800, 1000, 1200, 1500].forEach(l => {
+    if (l < lamMin || l > lamMax) return;
+    const x = xOf(l);
+    mk("line", { x1: x, y1: mT, x2: x, y2: mT + plotH, class: "gridline" }, axis);
+    mk("line", { x1: x, y1: mT + plotH, x2: x, y2: mT + plotH + 4 }, axis);
+    const t = mk("text", { x, y: mT + plotH + 16, "text-anchor": "middle" }, axis);
+    t.textContent = l;
+  });
+  const xlbl = mk("text", { x: mL + plotW / 2, y: mT + plotH + 38, "text-anchor": "middle", fill: "var(--dim)" });
+  xlbl.textContent = "Wavelength (nm, log scale)";
+
+  [-10000, -1000, -100, 0, 100, 1000, 10000].forEach(v => {
+    const y = yOf(v);
+    if (y < mT || y > mT + plotH) return;
+    mk("line", { x1: mL, y1: y, x2: mL + plotW, y2: y, class: "gridline" }, axis);
+    mk("line", { x1: mL - 4, y1: y, x2: mL, y2: y }, axis);
+    const t = mk("text", { x: mL - 8, y: y + 3, "text-anchor": "end" }, axis);
+    t.textContent = v === 0 ? "0" : v.toString();
+  });
+  const ylbl = mk("text", { x: 20, y: mT + plotH / 2, transform: `rotate(-90 20 ${mT + plotH / 2})`, "text-anchor": "middle", fill: "var(--dim)" });
+  ylbl.textContent = "α (a.u., symlog)";
+
+  // Zero line emphasized
+  mk("line", { x1: mL, y1: yOf(0), x2: mL + plotW, y2: yOf(0), stroke: "var(--dim2)" });
+
+  // Points
+  allPts.forEach(p => {
+    const x = xOf(p.lambda_nm);
+    const y = yOf(p.alpha_au);
+    const color = p.kind === "magic" ? "#6aa3ff" : "#e6a33a";
+    const g = mk("g", { class: "polpt", style: "cursor:pointer" });
+    mk("circle", { cx: x, cy: y, r: 5, fill: color, stroke: "#fff", "stroke-width": 1 }, g);
+    const lbl = mk("text", { x: x + 8, y: y + 3, fill: color, "font-size": 10 }, g);
+    lbl.textContent = p.lambda_nm.toFixed(p.lambda_nm < 500 ? 3 : 2) + " nm";
+    g.addEventListener("click", () => showPolarizabilityDetail(p));
+  });
+
+  // Legend
+  const leg = mk("g", { class: "legend" });
+  const lx = mL + plotW - 120, ly = mT + 8;
+  mk("circle", { cx: lx, cy: ly, r: 5, fill: "#6aa3ff", stroke: "#fff" }, leg);
+  mk("text", { x: lx + 10, y: ly + 3 }, leg).textContent = "magic";
+  mk("circle", { cx: lx, cy: ly + 18, r: 5, fill: "#e6a33a", stroke: "#fff" }, leg);
+  mk("text", { x: lx + 10, y: ly + 21 }, leg).textContent = "tune-out";
+}
+
+// ==================== detail pane ====================
+const detailEl = document.getElementById('detail');
+
+function showEmptyDetail() {
+  detailEl.innerHTML = `<div class="empty">Click a state or transition to see parameters.</div>`;
+}
+
+function showStateDetail(id) {
+  const s = stateById[id];
+  if (!s) return;
+  const hf = s.hyperfine_171;
+
+  let hfHtml = "";
+  if (app.isotope === "171" && hf) {
+    hfHtml = `
+      <div class="section-title">Hyperfine (<sup>171</sup>Yb)</div>
+      <dl class="kv">
+        <dt>A<sub>hfs</sub></dt><dd>${hf.A_hfs_MHz} MHz${hf.A_err ? " ± " + hf.A_err : ""}</dd>
+        ${hf.levels.map(l => `
+          <dt>F = ${fracStr(l.F)}</dt>
+          <dd>μ<sub>B</sub>g<sub>F</sub>/h = ${l.gF_kHzG}${l.gF_err !== undefined ? "(" + l.gF_err + ")" : ""} kHz/G${l.approx ? " ≈" : ""}</dd>
+        `).join("")}
+      </dl>
+    `;
+  } else if (app.isotope === "174") {
+    hfHtml = `
+      <div class="section-title"><sup>174</sup>Yb (I=0)</div>
+      <dl class="kv">
+        <dt>Hyperfine</dt><dd>none</dd>
+        <dt>g<sub>J</sub></dt><dd>${s.gJ ?? "—"}</dd>
+      </dl>
+    `;
+  }
+
+  const lifetimeStr = s.lifetime === "stable" ? "stable" :
+    s.lifetime_s !== undefined ? `${s.lifetime_s}${s.lifetime_err ? "(" + s.lifetime_err + ")" : ""} s` :
+    s.lifetime_ns !== undefined ? `${s.lifetime_ns}${s.lifetime_err ? "(" + s.lifetime_err + ")" : ""} ns` : "—";
+
+  detailEl.innerHTML = `
+    <h2 class="detail-title">${s.label}</h2>
+    <div class="detail-sub">${s.config} · ²ˢ⁺¹L<sub>J</sub> = ${s.term.replace(/(\d)([A-Z])(\d)/, '$1$2$3')} · J = ${s.J}</div>
+
+    <dl class="kv">
+      <dt>Energy</dt><dd>${fmt.sig(s.energy_cm, 8)} cm⁻¹</dd>
+      <dt>Lifetime</dt><dd>${lifetimeStr}</dd>
+      <dt>g<sub>J</sub></dt><dd>${s.gJ ?? "—"}${s.gJ_theoretical ? " (theory)" : ""}</dd>
+    </dl>
+
+    ${hfHtml}
+
+    <div class="note">${s.notes || ""}</div>
+
+    <div class="section-title">Actions</div>
+    <div class="row">
+      <button onclick="drillInto('${s.id}')" class="action-btn">Drill Into Hyperfine →</button>
+    </div>
+  `;
+}
+
+function showTransitionDetail(id) {
+  const t = trById[id];
+  if (!t) return;
+  const from = stateById[t.from], to = stateById[t.to];
+
+  // apply isotope shift when selected 174
+  let freq = t.omega_THz;
+  if (app.isotope === "174") {
+    // 174 frequency = 171 freq − 171 shift (both in MHz)
+    const shift171 = ISO_SHIFTS["171"][t.to];
+    if (shift171 !== null && shift171 !== undefined) {
+      freq -= shift171 * 1e-6;
+    }
+  }
+  const lam = 299792458 / (freq * 1e12) * 1e9;  // nm, vac
+
+  const branchHtml = t.branching_channels ? `
+    <div class="section-title">Branching</div>
+    ${t.branching_channels.map(b => `
+      <div class="branch-row">
+        <span class="lbl">${b.to}</span>
+        <div class="bar"><div class="fill" style="width:${(b.value*100).toFixed(1)}%"></div></div>
+        <span class="pct">${(b.value*100).toFixed(b.value < 0.01 ? 2 : 1)}%</span>
+      </div>
+    `).join("")}
+  ` : t.branching !== undefined ? `
+    <dl class="kv"><dt>Branching back</dt><dd>${t.branching_note || t.branching}</dd></dl>
+  ` : "";
+
+  const linewidth = t.linewidth_MHz ? `${t.linewidth_MHz} MHz` :
+                    t.linewidth_kHz ? `${t.linewidth_kHz} kHz` :
+                    t.linewidth_mHz ? `${t.linewidth_mHz} mHz` : "—";
+
+  const lifetime = t.lifetime_s ? `${t.lifetime_s} s` :
+                   t.lifetime_ns ? `${t.lifetime_ns} ns` : "—";
+
+  const Isat = t.Isat_mWcm2 ? `${t.Isat_mWcm2} mW/cm²` :
+               t.Isat_uWcm2 ? `${t.Isat_uWcm2} μW/cm²` : "—";
+
+  const warnStr = (app.isotope === "174" && t.id === "yellow_clock")
+    ? `<div class="note warn">Forbidden in <sup>174</sup>Yb (J=0 → J=0) without an external mixing field.</div>`
+    : "";
+
+  detailEl.innerHTML = `
+    <h2 class="detail-title">${t.name}</h2>
+    <div class="detail-sub">${from.label} → ${to.label}</div>
+
+    ${warnStr}
+
+    <dl class="kv">
+      <dt>Frequency ω₀/2π</dt><dd>${freq.toFixed(6)} THz</dd>
+      <dt>Wavelength (${app.wlBasis})</dt><dd>${(app.wlBasis === "vac" ? lam : (t.lambda_air_nm ?? lam)).toFixed(6)} nm</dd>
+      <dt>Wavenumber</dt><dd>${t.wavenumber_cm?.toFixed(4) ?? "—"} cm⁻¹</dd>
+      <dt>Energy</dt><dd>${t.energy_eV?.toFixed(6) ?? "—"} eV</dd>
+      <dt>Lifetime (upper)</dt><dd>${lifetime}</dd>
+      <dt>Γ</dt><dd>${fmt.sig(t.Gamma_s, 4)} s⁻¹</dd>
+      <dt>Δν FWHM</dt><dd>2π × ${linewidth}</dd>
+    </dl>
+
+    ${branchHtml}
+
+    <div class="section-title">Mechanical</div>
+    <dl class="kv">
+      <dt>v<sub>recoil</sub></dt><dd>${t.v_recoil_mms ?? "—"} mm/s</dd>
+      <dt>T<sub>recoil</sub></dt><dd>${t.T_recoil_nK ?? "—"} nK</dd>
+      <dt>T<sub>Doppler</sub></dt><dd>${t.T_Doppler_uK ? t.T_Doppler_uK + " μK" : "—"}</dd>
+      <dt>Doppler shift</dt><dd>2π × ${t.doppler_kHz ?? "—"} kHz</dd>
+    </dl>
+
+    <div class="section-title">Drive</div>
+    <dl class="kv">
+      <dt>⟨J‖er‖J′⟩</dt><dd>${t.reduced_dipole_ea0 ?? "—"} ea₀</dd>
+      <dt>I<sub>sat</sub></dt><dd>${Isat}</dd>
+      <dt>σ₀</dt><dd>${t.sigma0_m2 ? fmt.sig(t.sigma0_m2, 3) + " m²" : "—"}</dd>
+      <dt>f (osc. str.)</dt><dd>${t.f_osc ?? "—"}</dd>
+      <dt>Ω₀ @ 1mW, 1mm</dt><dd>${t.Rabi_MHz ? "2π × " + t.Rabi_MHz + " MHz" : "—"}</dd>
+    </dl>
+
+    ${t.Rabi_note ? `<div class="note">Rabi: ${t.Rabi_note}</div>` : ""}
+    ${t.notes ? `<div class="note">${t.notes}</div>` : ""}
+  `;
+}
+
+function showPolarizabilityDetail(p) {
+  detailEl.innerHTML = `
+    <h2 class="detail-title">${p.lambda_nm} nm</h2>
+    <div class="detail-sub">${p.transition} · ${p.kind === "magic" ? "magic" : "tune-out"}</div>
+    <dl class="kv">
+      <dt>λ</dt><dd>${p.lambda_nm} nm</dd>
+      <dt>α<sub>tot</sub></dt><dd>${p.alpha_au} a.u.</dd>
+      <dt>β (pol. angle)</dt><dd>${p.beta_deg ?? "—"}${typeof p.beta_deg === "number" ? "°" : ""}</dd>
+      <dt>Isotope</dt><dd>${p.isotope ? `<sup>${p.isotope}</sup>Yb` : `<sup>171</sup>Yb`}</dd>
+    </dl>
+    ${p.note ? `<div class="note">${p.note}</div>` : ""}
+  `;
+}
+
+// ==================== selection + navigation ====================
+function selectState(id) {
+  app.selectedState = id;
+  app.selectedTransition = null;
+  render();
+  showStateDetail(id);
+}
+function selectTransition(id) {
+  app.selectedTransition = id;
+  app.selectedState = null;
+  render();
+  showTransitionDetail(id);
+}
+function drillInto(id) {
+  app.hfState = id;
+  app.view = "hyperfine";
+  document.querySelectorAll(".tab").forEach(t => t.classList.toggle("active", t.dataset.view === "hyperfine"));
+  render();
+  updateCrumb();
+}
+function showTooltip(text, el) {
+  // simple title element
+  const existing = el.querySelector("title");
+  if (existing) existing.remove();
+  const t = document.createElementNS(svgNS, "title");
+  t.textContent = text;
+  el.appendChild(t);
+}
+
+function updateCrumb() {
+  const crumb = document.getElementById("crumb");
+  const iso = `<sup>${app.isotope}</sup>Yb`;
+  if (app.view === "overview") {
+    crumb.innerHTML = `<span class="here">${iso} / Overview</span>`;
+  } else if (app.view === "hyperfine") {
+    const s = app.hfState ? stateById[app.hfState] : null;
+    crumb.innerHTML = `<button onclick="gotoView('overview')">${iso} / Overview</button><span class="arrow">/</span><span class="here">Hyperfine: ${s ? s.label : "(select)"}</span>`;
+  } else if (app.view === "polarizability") {
+    crumb.innerHTML = `<button onclick="gotoView('overview')">${iso} / Overview</button><span class="arrow">/</span><span class="here">Polarizability</span>`;
+  }
+}
+
+function gotoView(v) {
+  app.view = v;
+  document.querySelectorAll(".tab").forEach(t => t.classList.toggle("active", t.dataset.view === v));
+  render();
+  updateCrumb();
+}
+window.gotoView = gotoView;
+window.drillInto = drillInto;
+
+// ==================== render dispatch ====================
+function render() {
+  if (app.view === "overview") renderOverview();
+  else if (app.view === "hyperfine") renderHyperfine();
+  else if (app.view === "polarizability") renderPolarizability();
+  updateCrumb();
+}
+
+// ==================== controls ====================
+document.querySelectorAll(".tab").forEach(t => {
+  t.addEventListener("click", () => gotoView(t.dataset.view));
+});
+document.querySelectorAll("#isotopeToggle button").forEach(b => {
+  b.addEventListener("click", () => {
+    app.isotope = b.dataset.iso;
+    document.querySelectorAll("#isotopeToggle button").forEach(x => x.classList.toggle("active", x === b));
+    render();
+    if (app.selectedState) showStateDetail(app.selectedState);
+    if (app.selectedTransition) showTransitionDetail(app.selectedTransition);
+  });
+});
+document.querySelectorAll("#wlToggle button").forEach(b => {
+  b.addEventListener("click", () => {
+    app.wlBasis = b.dataset.wl;
+    document.querySelectorAll("#wlToggle button").forEach(x => x.classList.toggle("active", x === b));
+    render();
+    if (app.selectedTransition) showTransitionDetail(app.selectedTransition);
+  });
+});
+document.getElementById("bfield").addEventListener("input", e => {
+  app.Bfield = +e.target.value;
+  document.getElementById("bfieldValue").textContent = `${app.Bfield} G`;
+  if (app.view === "hyperfine") render();
+});
+// ==================== init ====================
+window.addEventListener("resize", render);
+// Defer first render one frame so SVG has layout dimensions
+requestAnimationFrame(render);
+</script>
+</body>
+</html>

@@ -1,0 +1,112 @@
+{
+  "_source": "Kroeze, Kristensen, Pucher — 171Yb Reference Data, Table 7 and Fig. 4",
+  "_notes": "Measured magic, anti-magic, and tune-out wavelengths for 171Yb (174Yb asterisked). α_tot in atomic units for 1S0. β is angle between light polarization and quantization axis.",
+  "magic": [
+    {
+      "transition": "1S0–1P1",
+      "lambda_nm": 532,
+      "omega_THz": 564,
+      "alpha_au": 258,
+      "isotope": "174",
+      "beta_deg": 0,
+      "note": "For F'=3/2, m_F'=±3/2"
+    },
+    {
+      "transition": "1S0–3P0",
+      "lambda_nm": 397.634,
+      "omega_THz": 753.941,
+      "alpha_au": -15495,
+      "beta_deg": "∀∠"
+    },
+    {
+      "transition": "1S0–3P0",
+      "lambda_nm": 459.5960,
+      "lambda_err": 0.0005,
+      "omega_THz": 652.2956,
+      "alpha_au": 469,
+      "beta_deg": "∀∠"
+    },
+    {
+      "transition": "1S0–3P0",
+      "lambda_nm": 552.61074,
+      "lambda_err": 0.00019,
+      "omega_THz": 542.50205,
+      "alpha_au": 57,
+      "isotope": "174",
+      "beta_deg": "∀∠"
+    },
+    {
+      "transition": "1S0–3P0–3P1 |F'=3/2, m_F'=−1/2⟩",
+      "lambda_nm": 759.3560633,
+      "lambda_err": 0.0000031,
+      "omega_THz": 394.7982672,
+      "alpha_au": 188,
+      "beta_deg": 17,
+      "note": "Canonical optical lattice clock magic wavelength"
+    },
+    {
+      "transition": "1S0–3P1 |F'=3/2, m_F'=±1/2⟩",
+      "lambda_nm": 486.78,
+      "lambda_err": 0.01,
+      "omega_THz": 615.868,
+      "alpha_au": 370
+    },
+    {
+      "transition": "1S0–3P1 |F'=3/2, m_F'=±1/2⟩",
+      "lambda_nm": 1036.13,
+      "lambda_err": 0.01,
+      "omega_THz": 289.3387,
+      "alpha_au": 162
+    },
+    {
+      "transition": "1S0–3P1 |F'=3/2, m_F'=+3/2⟩",
+      "lambda_nm": 483,
+      "omega_THz": 621,
+      "alpha_au": 359,
+      "beta_deg": 90
+    },
+    {
+      "transition": "1S0–3P1 |F'=3/2, m_F'=+3/2⟩",
+      "lambda_nm": 783.8,
+      "omega_THz": 382.5,
+      "alpha_au": 184,
+      "beta_deg": 90
+    },
+    {
+      "transition": "1S0–3P1 |F'=3/2, m_F'=+3/2⟩",
+      "lambda_nm": 1036.12,
+      "lambda_err": 0.03,
+      "omega_THz": 289.341,
+      "alpha_au": 162,
+      "isotope": "174",
+      "beta_deg": 0
+    },
+    {
+      "transition": "1S0–3P1 |F'=3/2, m_F'=+3/2⟩",
+      "lambda_nm": 1035.83,
+      "lambda_err": 0.03,
+      "omega_THz": 289.422,
+      "alpha_au": 162,
+      "isotope": "174",
+      "beta_deg": 90
+    }
+  ],
+  "tune_out": [
+    {
+      "state": "1S0",
+      "lambda_nm": 553.2936,
+      "lambda_err": 0.0005,
+      "omega_THz": 541.8325,
+      "isotope": "174",
+      "alpha_au": 0
+    },
+    {
+      "state": "3P0",
+      "lambda_nm": 576.613,
+      "lambda_err": 0.010,
+      "omega_THz": 519.920,
+      "isotope": "174",
+      "alpha_au": 277
+    }
+  ]
+}

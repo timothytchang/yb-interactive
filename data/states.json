@@ -1,0 +1,164 @@
+{
+  "_source": "Kroeze, Kristensen, Pucher — 171Yb Reference Data (Feb 2026), arXiv:2509.04416v2",
+  "_notes": "Energies in cm^-1 from NIST / derived from transition tables. gF values in MHz/G. A_hfs in MHz. Zeeman coefficients μB·gF/h in kHz/G. Frequencies are 171Yb values; for 174Yb the interface applies isotope shifts from transitions.json.",
+  "states": [
+    {
+      "id": "1S0",
+      "label": "⁶s² ¹S₀",
+      "term": "1S0",
+      "config": "6s²",
+      "L": 0, "S": 0, "J": 0,
+      "energy_cm": 0,
+      "lifetime": "stable",
+      "gJ": null,
+      "hyperfine_171": {
+        "A_hfs_MHz": 0,
+        "levels": [
+          {"F": 0.5, "gF_kHzG": -0.7505, "gF_err": 0.0006}
+        ]
+      },
+      "notes": "Ground state. μBgF arises from nuclear spin only (gI·μN). No fine structure."
+    },
+    {
+      "id": "3P0",
+      "label": "⁶s⁶p ³P₀",
+      "term": "3P0",
+      "config": "6s6p",
+      "L": 1, "S": 1, "J": 0,
+      "energy_cm": 17288.4882,
+      "lifetime_s": 21.0,
+      "lifetime_err": 1.8,
+      "gJ": null,
+      "hyperfine_171": {
+        "A_hfs_MHz": 0,
+        "levels": [
+          {"F": 0.5, "gF_kHzG": -1.1496, "gF_err": 0.0006}
+        ]
+      },
+      "notes": "Metastable clock state. Finite E1 decay in 171Yb via hyperfine mixing gives ~21s lifetime; in bosonic 174Yb the transition is forbidden without external B mixing. gF is the clock-state Zeeman from higher-order fine-structure mixing."
+    },
+    {
+      "id": "3P1",
+      "label": "⁶s⁶p ³P₁",
+      "term": "3P1",
+      "config": "6s6p",
+      "L": 1, "S": 1, "J": 1,
+      "energy_cm": 17992.0613,
+      "lifetime_ns": 872.6,
+      "lifetime_err": 1.9,
+      "gJ": 1.492820,
+      "gJ_err": 0.000031,
+      "hyperfine_171": {
+        "A_hfs_MHz": 3957.85,
+        "A_err": 0.05,
+        "levels": [
+          {"F": 0.5, "gF_kHzG": 2786.10, "gF_err": 0.06},
+          {"F": 1.5, "gF_kHzG": 1392.674, "gF_err": 0.029}
+        ]
+      },
+      "notes": "Intercombination line. Green MOT upper state. 1.7% singlet admixture via spin-orbit coupling (β ≈ -0.12905)."
+    },
+    {
+      "id": "3P2",
+      "label": "⁶s⁶p ³P₂",
+      "term": "3P2",
+      "config": "6s6p",
+      "L": 1, "S": 1, "J": 2,
+      "energy_cm": 19710.4467,
+      "lifetime_s": 8.9,
+      "gJ": 1.501,
+      "gJ_theoretical": true,
+      "hyperfine_171": {
+        "A_hfs_MHz": 2680.9,
+        "A_err": 2.0,
+        "levels": [
+          {"F": 1.5, "gF_kHzG": 2521, "approx": true},
+          {"F": 2.5, "gF_kHzG": 1681, "approx": true}
+        ]
+      },
+      "notes": "Metastable. Green clock transition upper state. Decays via M2 to 1S0, M1 to 3P1, and hyperfine-induced E1 channels in 171Yb."
+    },
+    {
+      "id": "1P1",
+      "label": "⁶s⁶p ¹P₁",
+      "term": "1P1",
+      "config": "6s6p",
+      "L": 1, "S": 0, "J": 1,
+      "energy_cm": 25068.2581,
+      "lifetime_ns": 5.464,
+      "lifetime_err": 0.011,
+      "gJ": 1.035,
+      "gJ_err": 0.005,
+      "hyperfine_171": {
+        "A_hfs_MHz": -214.06,
+        "A_err": 0.17,
+        "levels": [
+          {"F": 0.5, "gF_kHzG": 1932, "gF_err": 9},
+          {"F": 1.5, "gF_kHzG": 965, "gF_err": 5}
+        ]
+      },
+      "notes": "Broad dipole-allowed transition to ground. Blue MOT / Zeeman slower upper state. Branching back to ground is ~1 − 6×10⁻⁸ → effectively cycling."
+    },
+    {
+      "id": "3D1",
+      "label": "⁵d⁶s ³D₁",
+      "term": "3D1",
+      "config": "5d6s",
+      "L": 2, "S": 1, "J": 1,
+      "energy_cm": 24489.14,
+      "lifetime_ns": 332,
+      "lifetime_err": 11,
+      "gJ": 0.499,
+      "gJ_theoretical": true,
+      "hyperfine_171": {
+        "A_hfs_MHz": -2038.30,
+        "A_err": 0.11,
+        "levels": [
+          {"F": 0.5, "gF_kHzG": 931, "approx": true},
+          {"F": 1.5, "gF_kHzG": 465, "approx": true}
+        ]
+      },
+      "notes": "IR repumper target from 3P0. Branches to 3P0 (64%), 3P1 (35%), 3P2 (1%)."
+    },
+    {
+      "id": "3D2",
+      "label": "⁵d⁶s ³D₂",
+      "term": "3D2",
+      "config": "5d6s",
+      "L": 2, "S": 1, "J": 2,
+      "energy_cm": 24751.95,
+      "gJ": 1.167,
+      "gJ_theoretical": true,
+      "hyperfine_171": {
+        "A_hfs_MHz": 1313.8,
+        "A_err": 3.3,
+        "levels": [
+          {"F": 1.5, "gF_kHzG": 1960, "approx": true},
+          {"F": 2.5, "gF_kHzG": 1307, "approx": true}
+        ]
+      },
+      "notes": "Sibling of 3D1 in the 5d6s manifold. Not a primary cooling/repumping target in this dataset."
+    },
+    {
+      "id": "3S1",
+      "label": "⁶s⁷s ³S₁",
+      "term": "3S1",
+      "config": "6s7s",
+      "L": 0, "S": 1, "J": 1,
+      "energy_cm": 32694.7523,
+      "lifetime_ns": 13.8,
+      "lifetime_err": 1.7,
+      "gJ": 2.01,
+      "gJ_err": 0.01,
+      "hyperfine_171": {
+        "A_hfs_MHz": 6838.41,
+        "A_err": 0.26,
+        "levels": [
+          {"F": 0.5, "gF_kHzG": 3751, "gF_err": 19},
+          {"F": 1.5, "gF_kHzG": 1875, "gF_err": 9}
+        ]
+      },
+      "notes": "Red repumper target from 3P0 (649 nm) and 3P2 (770 nm). Branches to 3P2 (51%), 3P1 (36%), 3P0 (13%), and 1P1 (0.21%)."
+    }
+  ]
+}
