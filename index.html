@@ -320,7 +320,8 @@
   .branch-row .lbl { width: 52px; color: var(--ink); font-weight: 400; }
   .branch-row .bar { flex: 1; height: 1px; background: var(--rule-soft); overflow: hidden; }
   .branch-row .bar .fill { height: 3px; margin-top: -1px; background: var(--accent); }
-  .branch-row .pct { width: 60px; text-align: right; color: var(--ink); font-weight: 500; }
+  .branch-row .pct { min-width: 60px; text-align: right; color: var(--ink); font-weight: 500; }
+  .branch-row .pct .dim-inline { color: var(--dim); font-weight: 400; font-size: var(--type-meta); }
 
   .note {
     background: transparent;
@@ -959,6 +960,23 @@ function showStateDetail(id) {
     s.lifetime_s !== undefined ? `${s.lifetime_s}${s.lifetime_err ? "(" + s.lifetime_err + ")" : ""} s` :
     s.lifetime_ns !== undefined ? `${s.lifetime_ns}${s.lifetime_err ? "(" + s.lifetime_err + ")" : ""} ns` : "—";
 
+  const branchHtml = s.branching_channels ? `
+    <div class="section-title">Branching (decay)</div>
+    ${s.branching_channels.map(b => {
+      const pct = b.value * 100;
+      const pctStr = pct >= 99.9 ? pct.toFixed(3) : pct < 1 ? pct.toFixed(2) : pct.toFixed(1);
+      const errStr = b.err !== undefined ? ` ± ${(b.err*100).toFixed(b.err < 0.01 ? 2 : 1)}%` : "";
+      const noteStr = b.note ? `  <span class="dim-inline">(${b.note})</span>` : "";
+      return `
+        <div class="branch-row">
+          <span class="lbl">→ ${b.to}</span>
+          <div class="bar"><div class="fill" style="width:${Math.max(pct, 0.4)}%"></div></div>
+          <span class="pct">${pctStr}%${errStr}${noteStr}</span>
+        </div>
+      `;
+    }).join("")}
+  ` : "";
+
   detailEl.innerHTML = `
     <h2 class="detail-title">${s.label}</h2>
     <div class="detail-sub">${s.config} · ²ˢ⁺¹L<sub>J</sub> = ${s.term.replace(/(\d)([A-Z])(\d)/, '$1$2$3')} · J = ${s.J}</div>
@@ -970,6 +988,8 @@ function showStateDetail(id) {
     </dl>
 
     ${hfHtml}
+
+    ${branchHtml}
 
     <div class="note">${s.notes || ""}</div>
 
@@ -996,17 +1016,11 @@ function showTransitionDetail(id) {
   }
   const lam = 299792458 / (freq * 1e12) * 1e9;  // nm, vac
 
-  const branchHtml = t.branching_channels ? `
-    <div class="section-title">Branching</div>
-    ${t.branching_channels.map(b => `
-      <div class="branch-row">
-        <span class="lbl">${b.to}</span>
-        <div class="bar"><div class="fill" style="width:${(b.value*100).toFixed(1)}%"></div></div>
-        <span class="pct">${(b.value*100).toFixed(b.value < 0.01 ? 2 : 1)}%</span>
-      </div>
-    `).join("")}
-  ` : t.branching !== undefined ? `
-    <dl class="kv"><dt>Branching back</dt><dd>${t.branching_note || t.branching}</dd></dl>
+  // Branching lives on the upper state now; show a pointer instead.
+  const upperState = stateById[t.to];
+  const branchHtml = upperState?.branching_channels ? `
+    <div class="section-title">Decay from ${upperState.label}</div>
+    <div class="note">Branching ratios are a property of the upper state. <a href="#" onclick="selectState('${upperState.id}');return false;">Open ${t.to} →</a></div>
   ` : "";
 
   const linewidth = t.linewidth_MHz ? `${t.linewidth_MHz} MHz` :

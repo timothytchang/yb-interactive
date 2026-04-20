@@ -96,7 +96,10 @@ const STATES_DATA = {
           {"F": 1.5, "gF_kHzG": 965, "gF_err": 5}
         ]
       },
-      "notes": "Broad dipole-allowed line. Blue MOT / Zeeman slower upper state. Branching back to ground ~ 1 − 6×10⁻⁸, effectively cycling."
+      "branching_channels": [
+        {"to": "1S0", "value": 1.0, "note": "1 − 6(4)×10⁻⁸"}
+      ],
+      "notes": "Broad dipole-allowed line. Blue MOT / Zeeman slower upper state. Effectively cycling back to ground."
     },
     {
       "id": "3D1",
@@ -117,7 +120,12 @@ const STATES_DATA = {
           {"F": 1.5, "gF_kHzG": 465, "approx": true}
         ]
       },
-      "notes": "IR repumper target from ³P₀. Branches to ³P₀ (64%), ³P₁ (35%), ³P₂ (1%)."
+      "branching_channels": [
+        {"to": "3P0", "value": 0.638, "err": 0.027},
+        {"to": "3P1", "value": 0.352, "err": 0.027},
+        {"to": "3P2", "value": 0.0099, "err": 0.0039}
+      ],
+      "notes": "IR repumper target from 3P0."
     },
     {
       "id": "3D2",
@@ -157,7 +165,13 @@ const STATES_DATA = {
           {"F": 1.5, "gF_kHzG": 1875, "gF_err": 9}
         ]
       },
-      "notes": "Red repumper target from ³P₀ (649 nm) and ³P₂ (770 nm). Branches to ³P₂ (51%), ³P₁ (36%), ³P₀ (13%), ¹P₁ (0.21%)."
+      "branching_channels": [
+        {"to": "3P2", "value": 0.508, "err": 0.026},
+        {"to": "3P1", "value": 0.360, "err": 0.025},
+        {"to": "3P0", "value": 0.130, "err": 0.013},
+        {"to": "1P1", "value": 0.0021, "err": 0.0009}
+      ],
+      "notes": "Red repumper target from 3P0 (649 nm) and 3P2 (770 nm)."
     }
   ]
 };
@@ -178,8 +192,6 @@ const TRANSITIONS_DATA = {
       "lifetime_ns": 5.464, "lifetime_err": 0.011,
       "Gamma_s": 1.830e8, "Gamma_err": 4e5,
       "linewidth_MHz": 29.13, "linewidth_err": 0.06,
-      "branching": 1.0,
-      "branching_note": "1 − 6(4)×10⁻⁸",
       "f_osc": 1.3098, "f_err": 0.0027,
       "v_recoil_mms": 5.852,
       "omega_recoil_kHz": 7.335,
@@ -268,11 +280,6 @@ const TRANSITIONS_DATA = {
       "lifetime_ns": 332, "lifetime_err": 11,
       "Gamma_s": 3.01e6, "Gamma_err": 1e5,
       "linewidth_kHz": 479, "linewidth_err": 16,
-      "branching_channels": [
-        {"to": "3P2", "value": 0.0099, "err": 0.0039},
-        {"to": "3P1", "value": 0.352, "err": 0.027},
-        {"to": "3P0", "value": 0.638, "err": 0.027}
-      ],
       "Gamma_partial_s": 1.92e6, "Gamma_partial_err": 1e5,
       "v_recoil_mms": 1.681,
       "omega_recoil_Hz": 605.2,
@@ -295,12 +302,6 @@ const TRANSITIONS_DATA = {
       "lifetime_ns": 13.8, "lifetime_err": 1.7,
       "Gamma_s": 7.2e7, "Gamma_err": 9e6,
       "linewidth_MHz": 11.5, "linewidth_err": 1.4,
-      "branching_channels": [
-        {"to": "3P2", "value": 0.508, "err": 0.026},
-        {"to": "3P1", "value": 0.360, "err": 0.025},
-        {"to": "3P0", "value": 0.130, "err": 0.013},
-        {"to": "1P1", "value": 0.0021, "err": 0.0009}
-      ],
       "Gamma_partial_s": 9.4e6, "Gamma_partial_err": 1.5e6,
       "v_recoil_mms": 3.596,
       "omega_recoil_kHz": 2.770,
@@ -323,12 +324,6 @@ const TRANSITIONS_DATA = {
       "lifetime_ns": 13.8, "lifetime_err": 1.7,
       "Gamma_s": 7.2e7, "Gamma_err": 9e6,
       "linewidth_MHz": 11.5, "linewidth_err": 1.4,
-      "branching_channels": [
-        {"to": "3P2", "value": 0.508, "err": 0.026},
-        {"to": "3P1", "value": 0.360, "err": 0.025},
-        {"to": "3P0", "value": 0.130, "err": 0.013},
-        {"to": "1P1", "value": 0.0021, "err": 0.0009}
-      ],
       "Gamma_partial_s": 3.7e7, "Gamma_partial_err": 5e6,
       "v_recoil_mms": 3.031,
       "omega_recoil_kHz": 1.968,
