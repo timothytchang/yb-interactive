@@ -334,6 +334,35 @@
     font-weight: 400;
   }
   .warn { border-left-color: var(--accent); color: var(--accent); }
+  /* caveat marker: small superscript letter pointing to footnote */
+  .caveat {
+    color: var(--accent);
+    font-size: 0.7em;
+    vertical-align: super;
+    line-height: 0;
+    margin-left: 2px;
+    cursor: help;
+    font-weight: 500;
+  }
+  .caveat-legend {
+    margin-top: 16px;
+    padding: 8px 0 0;
+    border-top: 1px dashed var(--rule-soft);
+    font-size: var(--type-meta);
+    color: var(--dim);
+    line-height: 1.5;
+  }
+  .caveat-legend .mark { color: var(--accent); font-weight: 500; margin-right: 4px; }
+  .caveat-legend div { margin-bottom: 4px; }
+  .group-hint {
+    margin-top: 12px;
+    font-size: var(--type-meta);
+    color: var(--dim);
+    line-height: 1.5;
+    padding: 8px 10px;
+    border-left: 2px solid var(--accent);
+    background: transparent;
+  }
   .footer {
     color: var(--dim);
     font-size: var(--type-meta);
@@ -385,6 +414,9 @@
       <div class="toggle" id="isotopeToggle">
         <button data-iso="171" class="active"><sup>171</sup>Yb</button>
         <button data-iso="174"><sup>174</sup>Yb</button>
+      </div>
+      <div id="isotopeHint" class="group-hint" style="display:none;">
+        Transition frequencies are shifted per Table 6. Most other values (Γ, τ, matrix elements, branching) are isotope-independent and carried over. Recoil values are ~1.8% off for <sup>174</sup>Yb; see per-value marks.
       </div>
     </div>
 
@@ -961,7 +993,7 @@ function showStateDetail(id) {
     s.lifetime_ns !== undefined ? `${s.lifetime_ns}${s.lifetime_err ? "(" + s.lifetime_err + ")" : ""} ns` : "—";
 
   const branchHtml = s.branching_channels ? `
-    <div class="section-title">Branching (decay)</div>
+    <div class="section-title">Branching (decay)${app.isotope === "174" ? ' <span class="caveat" title="Measured on 171Yb. Branching ratios between fine-structure levels depend on electronic structure only, so they transfer to 174Yb.">a</span>' : ""}</div>
     ${s.branching_channels.map(b => {
       const pct = b.value * 100;
       const pctStr = pct >= 99.9 ? pct.toFixed(3) : pct < 1 ? pct.toFixed(2) : pct.toFixed(1);
@@ -975,6 +1007,7 @@ function showStateDetail(id) {
         </div>
       `;
     }).join("")}
+    ${app.isotope === "174" ? '<div class="caveat-legend"><div><span class="mark">a</span>Measured on 171Yb. Isotope-independent for E1 decays to fine-structure levels.</div></div>' : ""}
   ` : "";
 
   detailEl.innerHTML = `
@@ -1023,6 +1056,25 @@ function showTransitionDetail(id) {
     <div class="note">Branching ratios are a property of the upper state. <a href="#" onclick="selectState('${upperState.id}');return false;">Open ${t.to} →</a></div>
   ` : "";
 
+  const is174 = app.isotope === "174";
+  const isForbidden174 = is174 && t.id === "yellow_clock";
+
+  // caveat marker helpers
+  const caveats = new Set();
+  const mark = (key, title) => {
+    caveats.add(key);
+    return `<span class="caveat" title="${title}">${key}</span>`;
+  };
+
+  // 171Yb-measured values that transfer ~unchanged physically (still flag for transparency)
+  const from171 = is174 ? mark("a", "Measured on 171Yb. Isotope-independent for this quantity (depends only on electronic structure).") : "";
+  // 171Yb values with a real mass-ratio error for 174Yb (~1.8% off on recoil)
+  const recoil171 = is174 ? mark("b", "171Yb value shown. Scale by 171/174 ≈ 0.983 for 174Yb (recoil depends on mass).") : "";
+  // Rabi string references 171Yb hyperfine basis; bosonic 174Yb uses m_J
+  const rabiNoteFor174 = is174 ? mark("c", "Rabi value and polarization label quoted in 171Yb hyperfine basis. 174Yb (I=0) uses m_J basis; the magnitude is approximately correct but the state labels are not.") : "";
+  // Yellow clock in 174 is forbidden, so these numbers should not be used
+  const forbiddenMark = isForbidden174 ? mark("⚠", "Transition is strictly forbidden in 174Yb (J=0→J=0). The 171Yb value is shown for reference only; do not use for 174Yb.") : "";
+
   const linewidth = t.linewidth_MHz ? `${t.linewidth_MHz} MHz` :
                     t.linewidth_kHz ? `${t.linewidth_kHz} kHz` :
                     t.linewidth_mHz ? `${t.linewidth_mHz} mHz` : "—";
@@ -1033,9 +1085,23 @@ function showTransitionDetail(id) {
   const Isat = t.Isat_mWcm2 ? `${t.Isat_mWcm2} mW/cm²` :
                t.Isat_uWcm2 ? `${t.Isat_uWcm2} μW/cm²` : "—";
 
-  const warnStr = (app.isotope === "174" && t.id === "yellow_clock")
+  const warnStr = isForbidden174
     ? `<div class="note warn">Forbidden in <sup>174</sup>Yb (J=0 → J=0) without an external mixing field.</div>`
     : "";
+
+  // pick which mark decorates lifetime/Γ/linewidth for the currently selected isotope
+  const rateMark = isForbidden174 ? forbiddenMark : from171;
+  const recoilMark = isForbidden174 ? forbiddenMark : recoil171;
+  const rabiMark = isForbidden174 ? forbiddenMark : rabiNoteFor174;
+
+  // legend for whichever caveats actually fired
+  const legendEntries = [];
+  if (caveats.has("a")) legendEntries.push(`<div><span class="mark">a</span>171Yb-measured value. Isotope-independent by physics (depends on electronic structure only), so same for 174Yb.</div>`);
+  if (caveats.has("b")) legendEntries.push(`<div><span class="mark">b</span>171Yb value; scale by 171/174 ≈ 0.983 for 174Yb (recoil ∝ 1/m).</div>`);
+  if (caveats.has("c")) legendEntries.push(`<div><span class="mark">c</span>Rabi and polarization label use 171Yb hyperfine basis. 174Yb (I=0) is in m_J basis.</div>`);
+  if (caveats.has("⚠")) legendEntries.push(`<div><span class="mark">⚠</span>Forbidden in 174Yb. Value shown is 171Yb for reference only.</div>`);
+  const legendHtml = legendEntries.length
+    ? `<div class="caveat-legend">${legendEntries.join("")}</div>` : "";
 
   detailEl.innerHTML = `
     <h2 class="detail-title">${t.name}</h2>
@@ -1048,32 +1114,33 @@ function showTransitionDetail(id) {
       <dt>Wavelength (${app.wlBasis})</dt><dd>${(app.wlBasis === "vac" ? lam : (t.lambda_air_nm ?? lam)).toFixed(6)} nm</dd>
       <dt>Wavenumber</dt><dd>${t.wavenumber_cm?.toFixed(4) ?? "—"} cm⁻¹</dd>
       <dt>Energy</dt><dd>${t.energy_eV?.toFixed(6) ?? "—"} eV</dd>
-      <dt>Lifetime (upper)</dt><dd>${lifetime}</dd>
-      <dt>Γ</dt><dd>${fmt.sig(t.Gamma_s, 4)} s⁻¹</dd>
-      <dt>Δν FWHM</dt><dd>2π × ${linewidth}</dd>
+      <dt>Lifetime (upper)</dt><dd>${lifetime}${rateMark}</dd>
+      <dt>Γ</dt><dd>${fmt.sig(t.Gamma_s, 4)} s⁻¹${rateMark}</dd>
+      <dt>Δν FWHM</dt><dd>2π × ${linewidth}${rateMark}</dd>
     </dl>
 
     ${branchHtml}
 
     <div class="section-title">Mechanical</div>
     <dl class="kv">
-      <dt>v<sub>recoil</sub></dt><dd>${t.v_recoil_mms ?? "—"} mm/s</dd>
-      <dt>T<sub>recoil</sub></dt><dd>${t.T_recoil_nK ?? "—"} nK</dd>
-      <dt>T<sub>Doppler</sub></dt><dd>${t.T_Doppler_uK ? t.T_Doppler_uK + " μK" : "—"}</dd>
-      <dt>Doppler shift</dt><dd>2π × ${t.doppler_kHz ?? "—"} kHz</dd>
+      <dt>v<sub>recoil</sub></dt><dd>${t.v_recoil_mms ?? "—"} mm/s${recoilMark}</dd>
+      <dt>T<sub>recoil</sub></dt><dd>${t.T_recoil_nK ?? "—"} nK${recoilMark}</dd>
+      <dt>T<sub>Doppler</sub></dt><dd>${t.T_Doppler_uK ? t.T_Doppler_uK + " μK" : "—"}${is174 ? from171 : ""}</dd>
+      <dt>Doppler shift</dt><dd>2π × ${t.doppler_kHz ?? "—"} kHz${recoilMark}</dd>
     </dl>
 
     <div class="section-title">Drive</div>
     <dl class="kv">
-      <dt>⟨J‖er‖J′⟩</dt><dd>${t.reduced_dipole_ea0 ?? "—"} ea₀</dd>
-      <dt>I<sub>sat</sub></dt><dd>${Isat}</dd>
-      <dt>σ₀</dt><dd>${t.sigma0_m2 ? fmt.sig(t.sigma0_m2, 3) + " m²" : "—"}</dd>
-      <dt>f (osc. str.)</dt><dd>${t.f_osc ?? "—"}</dd>
-      <dt>Ω₀ @ 1mW, 1mm</dt><dd>${t.Rabi_MHz ? "2π × " + t.Rabi_MHz + " MHz" : "—"}</dd>
+      <dt>⟨J‖er‖J′⟩</dt><dd>${t.reduced_dipole_ea0 ?? "—"} ea₀${is174 ? from171 : ""}</dd>
+      <dt>I<sub>sat</sub></dt><dd>${Isat}${is174 ? from171 : ""}</dd>
+      <dt>σ₀</dt><dd>${t.sigma0_m2 ? fmt.sig(t.sigma0_m2, 3) + " m²" : "—"}${is174 ? from171 : ""}</dd>
+      <dt>f (osc. str.)</dt><dd>${t.f_osc ?? "—"}${is174 ? from171 : ""}</dd>
+      <dt>Ω₀ @ 1mW, 1mm</dt><dd>${t.Rabi_MHz ? "2π × " + t.Rabi_MHz + " MHz" : "—"}${rabiMark}</dd>
     </dl>
 
     ${t.Rabi_note ? `<div class="note">Rabi: ${t.Rabi_note}</div>` : ""}
     ${t.notes ? `<div class="note">${t.notes}</div>` : ""}
+    ${legendHtml}
   `;
 }
 
@@ -1154,10 +1221,12 @@ function render() {
 document.querySelectorAll(".tab").forEach(t => {
   t.addEventListener("click", () => gotoView(t.dataset.view));
 });
+const isotopeHintEl = document.getElementById("isotopeHint");
 document.querySelectorAll("#isotopeToggle button").forEach(b => {
   b.addEventListener("click", () => {
     app.isotope = b.dataset.iso;
     document.querySelectorAll("#isotopeToggle button").forEach(x => x.classList.toggle("active", x === b));
+    if (isotopeHintEl) isotopeHintEl.style.display = app.isotope === "174" ? "block" : "none";
     render();
     if (app.selectedState) showStateDetail(app.selectedState);
     if (app.selectedTransition) showTransitionDetail(app.selectedTransition);
